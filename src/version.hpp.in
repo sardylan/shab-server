@@ -1,0 +1,32 @@
+/*
+ * SHAB Server
+ * Copyright (C) 2018  Luca Cireddu <sardylan@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef __SHAB_SERVER_VERSION_H
+#define __SHAB_SERVER_VERSION_H
+
+#define SHAB_SERVER_APPLICATION_NAME "@SHAB_SERVER_APPLICATION_NAME@"
+
+#define SHAB_SERVER_APPLICATION_VERSION_MAJOR @SHAB_SERVER_APPLICATION_VERSION_MAJOR@
+#define SHAB_SERVER_APPLICATION_VERSION_MINOR @SHAB_SERVER_APPLICATION_VERSION_MINOR@
+#define SHAB_SERVER_APPLICATION_VERSION_BUGFIX @SHAB_SERVER_APPLICATION_VERSION_BUGFIX@
+#define SHAB_SERVER_APPLICATION_VERSION "@SHAB_SERVER_APPLICATION_VERSION@"
+
+#define SHAB_SERVER_ORGANIZATION_NAME "@SHAB_SERVER_ORGANIZATION_NAME@"
+#define SHAB_SERVER_ORGANIZATION_DOMAIN "@SHAB_SERVER_ORGANIZATION_DOMAIN@"
+
+#endif

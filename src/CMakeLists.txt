@@ -1,0 +1,20 @@
+configure_file(version.hpp.in version.hpp)
+
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+find_package(Qt5 REQUIRED COMPONENTS
+        Core)
+
+set(SHAB_SERVER_SOURCES
+        server.cpp)
+
+set(SHAB_SERVER_HEADERS
+        server.hpp
+        version.hpp)
+
+add_executable(shab-server
+        ${SHAB_SERVER_SOURCES}
+        ${SHAB_SERVER_HEADERS})
+
+target_link_libraries(shab-server
+        Qt5::Core)
