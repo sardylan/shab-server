@@ -16,8 +16,8 @@
  *
  */
 
-#include <iostream>
 #include <QtCore/QTextStream>
+#include <QtNetwork/QTcpSocket>
 
 #include "server.hpp"
 #include "version.hpp"
@@ -36,19 +36,28 @@ int main(int argc, char **argv) {
 }
 
 ShabServer::ShabServer(int &argc, char **argv) : QCoreApplication(argc, argv) {
-
+    serverSocket = new QTcpServer(this);
 }
 
 ShabServer::~ShabServer() = default;
 
 void ShabServer::run() {
     printHeader();
+    prepareSocket();
 
-    QMetaObject::invokeMethod(this, "quit", Qt::QueuedConnection);
+//    QMetaObject::invokeMethod(this, "quit", Qt::QueuedConnection);
+}
+
+void ShabServer::prepareSocket() {
+    connect(serverSocket, &QTcpServer::newConnection, this, &ShabServer::handleNewServerConnection);
 }
 
 void ShabServer::printHeader() {
     QTextStream stdErr(stderr);
     stdErr << applicationName() << " " << applicationVersion() << endl;
     stdErr << "Running with PID " << applicationPid() << endl;
+}
+
+void ShabServer::handleNewServerConnection() {
+    QTcpSocket *socket = serverSocket->nextPendingConnection();
 }

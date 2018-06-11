@@ -20,6 +20,7 @@
 #define __SHAB_SERVER_SERVER_H
 
 #include <QtCore/QCoreApplication>
+#include <QtNetwork/QTcpServer>
 
 namespace org::thehellnet::shab {
 
@@ -36,7 +37,15 @@ namespace org::thehellnet::shab {
 
     private:
 
+        QTcpServer *serverSocket;
+
+        void prepareSocket();
+
         void printHeader();
+
+    private slots:
+
+        void handleNewServerConnection();
     };
 };
 
