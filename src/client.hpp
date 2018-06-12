@@ -16,46 +16,45 @@
  *
  */
 
-#ifndef __SHAB_SERVER_SERVER_H
-#define __SHAB_SERVER_SERVER_H
+#ifndef __SHAB_SERVER_CLIENT_H
+#define __SHAB_SERVER_CLIENT_H
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QHash>
+#include <QtCore/QObject>
 #include <QtCore/QThread>
-#include <QtNetwork/QTcpServer>
-
-#include "client.hpp"
+#include <QtNetwork/QTcpSocket>
 
 namespace org::thehellnet::shab {
 
-    class ShabServer : public QCoreApplication {
+    class ShabClient : public QObject {
     Q_OBJECT
 
     public:
+        explicit ShabClient(QTcpSocket *socket);
 
-        explicit ShabServer(int &argc, char **argv);
+        ~ShabClient() override;
 
-        ~ShabServer() override;
+    public slots:
 
-        void run();
+        void quit();
+
+        void send(QByteArray rawData);
 
     private:
-        QTcpServer *serverSocket;
-        quint64 nextId;
-        QHash<quint64, QThread *> threads;
-        QHash<quint64, ShabClient *> clients;
-
-        void prepareSocket();
-
-        void printHeader();
-
-        void clientDisonnection(quint64 id);
+        QTcpSocket *socket;
 
     private slots:
 
-        void handleNewServerConnection();
+        void handleSocketDisconnection();
 
+        void handleSocketReadyRead();
+
+    signals:
+
+        void disconnected();
+
+        void newRawData(QByteArray data);
     };
+
 };
 
 #endif

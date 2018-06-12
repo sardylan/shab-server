@@ -7,11 +7,13 @@ find_package(Qt5 REQUIRED COMPONENTS
         Network)
 
 set(SHAB_SERVER_SOURCES
-        server.cpp)
+        server.cpp
+        client.cpp)
 
 set(SHAB_SERVER_HEADERS
         server.hpp
-        version.hpp)
+        version.hpp
+        client.cpp)
 
 add_executable(shab-server
         ${SHAB_SERVER_SOURCES}
