@@ -23,6 +23,8 @@ if (NOT QT5_QMAKE_BIN)
     message(FATAL_ERROR "Wrong Qt5 directory: ${QT5_PREFIX}")
 endif ()
 
+message(STATUS "Qt5 directory: ${QT5_PREFIX}")
+
 set(CMAKE_PREFIX_PATH "${QT5_PREFIX}/lib/cmake")
 
 set(SHAB_SERVER_APPLICATION_NAME "SHAB Server")
