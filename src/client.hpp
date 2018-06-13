@@ -35,7 +35,9 @@ namespace org::thehellnet::shab {
 
     public slots:
 
-        void quit();
+        void start();
+
+        void stop();
 
         void send(QByteArray rawData);
 

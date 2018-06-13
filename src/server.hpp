@@ -49,8 +49,6 @@ namespace org::thehellnet::shab {
 
         void printHeader();
 
-        void clientDisonnection(quint64 id);
-
     private slots:
 
         void handleNewServerConnection();

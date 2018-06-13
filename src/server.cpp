@@ -47,7 +47,7 @@ void ShabServer::run() {
     printHeader();
     prepareSocket();
 
-//    QMetaObject::invokeMethod(this, "quit", Qt::QueuedConnection);
+//    QMetaObject::invokeMethod(this, "stop", Qt::QueuedConnection);
 }
 
 void ShabServer::prepareSocket() {
@@ -73,35 +73,27 @@ void ShabServer::handleNewServerConnection() {
     QTcpSocket *socket = serverSocket->nextPendingConnection();
 
     auto *newClient = new ShabClient(socket);
-
     auto *newThread = new QThread();
+
     newClient->moveToThread(newThread);
-    newThread->start();
 
+    connect(newClient, &ShabClient::disconnected, newThread, &QThread::quit);
     connect(newClient, &ShabClient::disconnected, [=]() {
-        clientDisonnection(id);
+        QTextStream stdErr(stderr);
+        stdErr << "Connection " << id << " closed." << endl;
     });
-
     connect(newClient, &ShabClient::newRawData, [=](QString rawData) {
         QTextStream stdOut(stdout);
-        stdOut << rawData;
+        stdOut << "Rar data from " << id << ": " << rawData;
     });
+
+    connect(newThread, &QThread::started, newClient, &ShabClient::start);
+
+    connect(newThread, &QThread::finished, newClient, &ShabClient::deleteLater);
+    connect(newThread, &QThread::finished, newThread, &QThread::deleteLater);
+
+    newThread->start();
 
     clients.insert(id, newClient);
     threads.insert(id, newThread);
-}
-
-void ShabServer::clientDisonnection(quint64 id) {
-    QTextStream stdErr(stderr);
-
-    ShabClient *client = clients.take(id);
-    QThread *thread = threads.take(id);
-
-    client->quit();
-    client->deleteLater();
-
-    thread->quit();
-    thread->deleteLater();
-
-    stdErr << "Connection " << id << " closed." << endl;
 }

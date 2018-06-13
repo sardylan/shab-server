@@ -23,9 +23,6 @@ using namespace org::thehellnet::shab;
 
 ShabClient::ShabClient(QTcpSocket *socket) : QObject() {
     this->socket = socket;
-
-    connect(socket, &QAbstractSocket::disconnected, this, &ShabClient::handleSocketDisconnection);
-    connect(socket, &QIODevice::readyRead, this, &ShabClient::handleSocketReadyRead);
 }
 
 ShabClient::~ShabClient() {
@@ -33,7 +30,12 @@ ShabClient::~ShabClient() {
         socket->deleteLater();
 }
 
-void ShabClient::quit() {
+void ShabClient::start() {
+    connect(socket, &QAbstractSocket::disconnected, this, &ShabClient::handleSocketDisconnection);
+    connect(socket, &QIODevice::readyRead, this, &ShabClient::handleSocketReadyRead);
+}
+
+void ShabClient::stop() {
     if (socket != nullptr) {
         if (socket->isOpen())
             socket->close();
@@ -58,4 +60,3 @@ void ShabClient::handleSocketReadyRead() {
 
     emit newRawData(rawData);
 }
-
