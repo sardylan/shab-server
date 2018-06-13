@@ -20,5 +20,6 @@ add_executable(shab-server
         ${SHAB_SERVER_HEADERS})
 
 target_link_libraries(shab-server
+        shab
         Qt5::Core
         Qt5::Network)
