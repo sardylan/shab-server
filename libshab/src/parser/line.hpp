@@ -37,7 +37,7 @@ namespace org::thehellnet::shab::parser {
     private:
         static quint16 parseChecksum(const QString &item);
 
-        static double parseDouble(const QString &item);
+        static double parseDouble(const QString &item, int decimals);
 
         static QString parseString(const QString &item);
     };

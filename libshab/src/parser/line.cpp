@@ -17,6 +17,8 @@
  */
 
 
+#include <QtCore/QtMath>
+
 #include "line.hpp"
 #include "exception.hpp"
 
@@ -36,12 +38,36 @@ ShabLine LineParser::parse(const QByteArray &rawData) {
         throw LineParserException();
 
     line.setChecksum(parseChecksum(checksumString));
-    line.setIdent(parseString(items[LIBSHAB_LINE_POSITION_IDENT]));
-    line.setLatitude(parseDouble(items[LIBSHAB_LINE_POSITION_LATITUDE]));
-    line.setLongitude(parseDouble(items[LIBSHAB_LINE_POSITION_LONGITUDE]));
-    line.setAltitude(parseDouble(items[LIBSHAB_LINE_POSITION_ALTITUDE]));
-    line.setSpeed(parseDouble(items[LIBSHAB_LINE_POSITION_SPEED]));
-    line.setAngle(parseDouble(items[LIBSHAB_LINE_POSITION_ANGLE]));
+
+    QString &identString = items[LIBSHAB_LINE_POSITION_IDENT];
+    if (identString.length() == 0)
+        throw LineParserException();
+    line.setIdent(parseString(identString));
+
+    QString &latitudeString = items[LIBSHAB_LINE_POSITION_LATITUDE];
+    if (latitudeString.length() < 7)
+        throw LineParserException();
+    line.setLatitude(parseDouble(latitudeString, 6));
+
+    QString &longitudeString = items[LIBSHAB_LINE_POSITION_LONGITUDE];
+    if (longitudeString.length() < 7)
+        throw LineParserException();
+    line.setLongitude(parseDouble(longitudeString, 6));
+
+    QString &altitudeString = items[LIBSHAB_LINE_POSITION_ALTITUDE];
+    if (altitudeString.length() == 0)
+        throw LineParserException();
+    line.setAltitude(parseDouble(altitudeString, 1));
+
+    QString &speedString = items[LIBSHAB_LINE_POSITION_SPEED];
+    if (speedString.length() == 0)
+        throw LineParserException();
+    line.setSpeed(parseDouble(speedString, 1));
+
+    QString &angleSpeed = items[LIBSHAB_LINE_POSITION_ANGLE];
+    if (angleSpeed.length() == 0)
+        throw LineParserException();
+    line.setAngle(parseDouble(angleSpeed, 1));
 
     return line;
 }
@@ -54,8 +80,16 @@ quint16 LineParser::parseChecksum(const QString &item) {
     return static_cast<quint16>(item.toInt(nullptr, 16));
 }
 
-double LineParser::parseDouble(const QString &item) {
-    return item.toDouble();
+double LineParser::parseDouble(const QString &item, int decimals) {
+    if (item.length() == 0)
+        return 0;
+
+    double value = item.toDouble();
+
+    if (decimals > 0)
+        value /= qPow(10, decimals);
+
+    return value;
 }
 
 QString LineParser::parseString(const QString &item) {

@@ -69,6 +69,10 @@ namespace org::thehellnet::shab::protocol {
 
         void setAngle(double angle);
 
+        bool operator==(const ShabLine &rhs) const;
+
+        bool operator!=(const ShabLine &rhs) const;
+
     private:
         quint16 checksum;
         QString ident;

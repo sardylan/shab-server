@@ -29,10 +29,80 @@ QTEST_MAIN(LineParserTest)
 
 void LineParserTest::emptyInput() {
     input = "";
+
     QVERIFY_EXCEPTION_THROWN(LineParser::parse(input), LineParserException);
 }
 
 void LineParserTest::emptyItems() {
     input = "||||||";
+
     QVERIFY_EXCEPTION_THROWN(LineParser::parse(input), LineParserException);
+}
+
+void LineParserTest::wrongChecksumLength() {
+    input = "4D2|shab|-39445419|-9541433|-10|0|0";
+
+    QVERIFY_EXCEPTION_THROWN(LineParser::parse(input), LineParserException);
+}
+
+void LineParserTest::wrongLatitudeLength() {
+    input = "04D2|shab|445419|-9541433|-10|0|0";
+
+    QVERIFY_EXCEPTION_THROWN(LineParser::parse(input), LineParserException);
+}
+
+void LineParserTest::wrongLongitudeLength() {
+    input = "04D2|shab|39445419|541433|-10|0|0";
+
+    QVERIFY_EXCEPTION_THROWN(LineParser::parse(input), LineParserException);
+}
+
+void LineParserTest::wrongAltitudeLength() {
+    input = "04D2|shab|39445419|9541433||0|0";
+
+    QVERIFY_EXCEPTION_THROWN(LineParser::parse(input), LineParserException);
+}
+
+void LineParserTest::wrongSpeedLength() {
+    input = "04D2|shab|39445419|9541433|110||0";
+
+    QVERIFY_EXCEPTION_THROWN(LineParser::parse(input), LineParserException);
+}
+
+void LineParserTest::wrongAngleLength() {
+    input = "04D2|shab|39445419|9541433|110|0|";
+
+    QVERIFY_EXCEPTION_THROWN(LineParser::parse(input), LineParserException);
+}
+
+void LineParserTest::normalLine() {
+    input = "04D2|shab|39445419|9541433|110|0|0";
+
+    expected.setChecksum(0x04d2);
+    expected.setIdent("shab");
+    expected.setLatitude(39.445419);
+    expected.setLongitude(9.541433);
+    expected.setAltitude(11.0);
+    expected.setSpeed(0.0);
+    expected.setAngle(0.0);
+
+    actual = LineParser::parse(input);
+
+    QCOMPARE(actual, expected);
+}
+
+void LineParserTest::negativeValues() {
+    input = "04D2|shab|-39445419|-9541433|-10|0|0";
+
+    expected.setChecksum(0x04d2);
+    expected.setIdent("shab");
+    expected.setLatitude(-39.445419);
+    expected.setLongitude(-9.541433);
+    expected.setAltitude(-1.0);
+    expected.setSpeed(0.0);
+    expected.setAngle(0.0);
+
+    actual = LineParser::parse(input);
+
+    QCOMPARE(actual, expected);
 }

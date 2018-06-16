@@ -86,3 +86,17 @@ double ShabLine::getAngle() const {
 void ShabLine::setAngle(double angle) {
     ShabLine::angle = angle;
 }
+
+bool ShabLine::operator==(const ShabLine &rhs) const {
+    return checksum == rhs.checksum &&
+           ident == rhs.ident &&
+           latitude == rhs.latitude &&
+           longitude == rhs.longitude &&
+           altitude == rhs.altitude &&
+           speed == rhs.speed &&
+           angle == rhs.angle;
+}
+
+bool ShabLine::operator!=(const ShabLine &rhs) const {
+    return !(rhs == *this);
+}

@@ -41,6 +41,22 @@ namespace org::thehellnet::shab::protocol {
         void emptyInput();
 
         void emptyItems();
+
+        void wrongChecksumLength();
+
+        void wrongLatitudeLength();
+
+        void wrongLongitudeLength();
+
+        void wrongAltitudeLength();
+
+        void wrongSpeedLength();
+
+        void wrongAngleLength();
+
+        void normalLine();
+
+        void negativeValues();
     };
 
 }
