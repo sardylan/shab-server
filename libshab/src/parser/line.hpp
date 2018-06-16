@@ -34,7 +34,10 @@ namespace org::thehellnet::shab::parser {
 
         static QByteArray serialize(const ShabLine &line);
 
+        static quint16 checksum16(const QString &item);
+
     private:
+
         static quint16 parseChecksum(const QString &item);
 
         static double parseDouble(const QString &item, int decimals);

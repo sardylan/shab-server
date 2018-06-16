@@ -37,7 +37,10 @@ ShabLine LineParser::parse(const QByteArray &rawData) {
     if (checksumString.length() != 4)
         throw LineParserException();
 
-    line.setChecksum(parseChecksum(checksumString));
+    quint16 checksum = parseChecksum(checksumString);
+    QString checkRawData = checksumString.mid(5, checksumString.length());
+
+    line.setChecksum(checksum);
 
     QString &identString = items[LIBSHAB_LINE_POSITION_IDENT];
     if (identString.length() == 0)
@@ -74,6 +77,17 @@ ShabLine LineParser::parse(const QByteArray &rawData) {
 
 QByteArray LineParser::serialize(const ShabLine &line) {
     return QByteArray();
+}
+
+quint16 LineParser::checksum16(const QString &item) {
+    quint16 checksum = 0;
+
+    for (char c: item.toStdString()) {
+        checksum += c;
+        checksum %= 0xFFFF + 1;
+    }
+
+    return checksum;
 }
 
 quint16 LineParser::parseChecksum(const QString &item) {

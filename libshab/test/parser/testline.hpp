@@ -31,11 +31,6 @@ namespace org::thehellnet::shab::protocol {
     class LineParserTest : public QObject {
     Q_OBJECT
 
-    private:
-        QByteArray input;
-        ShabLine expected;
-        ShabLine actual;
-
     private slots:
 
         void emptyInput();
@@ -57,6 +52,8 @@ namespace org::thehellnet::shab::protocol {
         void normalLine();
 
         void negativeValues();
+
+        void checksumEmpty();
     };
 
 }
