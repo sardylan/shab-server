@@ -53,6 +53,8 @@ namespace org::thehellnet::shab {
 
         void handleNewServerConnection();
 
+        void handleNewRawLine(QString rawData);
+
     };
 };
 

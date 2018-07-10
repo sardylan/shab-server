@@ -21,8 +21,12 @@
 
 #include "server.hpp"
 #include "version.hpp"
+#include <parser/line.hpp>
+#include <parser/exception.hpp>
 
 using namespace org::thehellnet::shab;
+using namespace org::thehellnet::shab::protocol;
+using namespace org::thehellnet::shab::parser;
 
 int main(int argc, char **argv) {
     QCoreApplication::setApplicationName(SHAB_SERVER_APPLICATION_NAME);
@@ -82,10 +86,11 @@ void ShabServer::handleNewServerConnection() {
         QTextStream stdErr(stderr);
         stdErr << "Connection " << id << " closed." << endl;
     });
-    connect(newClient, &ShabClient::newRawData, [=](QString rawData) {
+    connect(newClient, &ShabClient::newRawLine, [=](QString rawData) {
         QTextStream stdOut(stdout);
-        stdOut << "Rar data from " << id << ": " << rawData;
+        stdOut << "Raw data from " << id << ": " << rawData << endl;
     });
+    connect(newClient, &ShabClient::newRawLine, this, &ShabServer::handleNewRawLine);
 
     connect(newThread, &QThread::started, newClient, &ShabClient::start);
 
@@ -100,4 +105,18 @@ void ShabServer::handleNewServerConnection() {
 
     clients.insert(id, newClient);
     threads.insert(id, newThread);
+}
+
+void ShabServer::handleNewRawLine(QString rawData) {
+    ShabLine shabLine;
+
+    try {
+        shabLine = LineParser::parse(rawData);
+    } catch (LineParserException &e) {
+        QTextStream stdErr(stderr);
+        stdErr << "Exception raised parsing raw data" << endl;
+    }
+
+    QTextStream stdOut(stderr);
+    stdOut << shabLine.getIdent() << endl;
 }
