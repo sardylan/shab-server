@@ -54,7 +54,7 @@ namespace org::thehellnet::shab {
 
         void disconnected();
 
-        void newRawData(QByteArray data);
+        void newRawLine(QString data);
     };
 
 };

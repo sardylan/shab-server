@@ -57,6 +57,6 @@ void ShabClient::handleSocketDisconnection() {
 
 void ShabClient::handleSocketReadyRead() {
     QByteArray rawData = socket->readAll();
-
-    emit newRawData(rawData);
+    QString rawLine = QString(rawData).trimmed();
+    emit newRawLine(rawLine);
 }
