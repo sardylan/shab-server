@@ -89,6 +89,10 @@ void ShabServer::handleNewServerConnection() {
 
     connect(newThread, &QThread::started, newClient, &ShabClient::start);
 
+    connect(newThread, &QThread::finished, [=]() {
+        clients.remove(id);
+        threads.remove(id);
+    });
     connect(newThread, &QThread::finished, newClient, &ShabClient::deleteLater);
     connect(newThread, &QThread::finished, newThread, &QThread::deleteLater);
 
