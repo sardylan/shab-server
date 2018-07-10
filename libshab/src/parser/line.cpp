@@ -83,8 +83,21 @@ ShabLine LineParser::parse(const QByteArray &rawData) {
     return LineParser::parse(data);
 }
 
-QByteArray LineParser::serialize(const ShabLine &line) {
-    return QByteArray();
+QString LineParser::serialize(const ShabLine &line) {
+    QStringList stringItems;
+    stringItems.append(line.getIdent());
+    stringItems.append(serializeDouble(line.getLatitude()));
+    stringItems.append(serializeDouble(line.getLongitude()));
+    stringItems.append(serializeDouble(line.getAltitude(), 1));
+    stringItems.append(serializeDouble(line.getSpeed(), 1));
+    stringItems.append(serializeDouble(line.getAngle(), 1));
+
+    QString checksumLine = stringItems.join("|");
+    quint16 checksum = checksum16(checksumLine);
+    QString checksumString = serializeChecksum(checksum);
+    QString rawLine = checksumString + "|" + checksumLine;
+
+    return rawLine;
 }
 
 quint16 LineParser::checksum16(const QString &item) {
@@ -103,6 +116,10 @@ quint16 LineParser::parseChecksum(const QString &item) {
     return static_cast<quint16>(item.toInt(nullptr, 16));
 }
 
+QString LineParser::serializeChecksum(const quint16 &checksum) {
+    return QString("%1").arg(checksum, 4, 16, QChar('0')).toUpper();
+}
+
 double LineParser::parseDouble(const QString &item, int decimals) {
     if (item.length() == 0)
         return 0;
@@ -117,4 +134,9 @@ double LineParser::parseDouble(const QString &item, int decimals) {
 
 QString LineParser::parseString(const QString &item) {
     return QString(item).remove(QRegExp(R"([\n\t\r])")).trimmed();
+}
+
+QString LineParser::serializeDouble(const double &value, int precision) {
+    QString valueString = QString::number(value, 'f', precision);
+    return valueString.replace(".", "");
 }

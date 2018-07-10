@@ -142,6 +142,25 @@ void LineParserTest::negativeValues() {
     QCOMPARE(actual, expected);
 }
 
+void LineParserTest::serializeNormalLine() {
+    ShabLine input;
+    QString expected;
+    QString actual;
+
+    input.setIdent("shab");
+    input.setLatitude(-39.445419);
+    input.setLongitude(-9.541433);
+    input.setAltitude(-1.0);
+    input.setSpeed(0.0);
+    input.setAngle(0.0);
+
+    expected = "08C6|shab|-39445419|-9541433|-10|00|00";
+
+    actual = LineParser::serialize(input);
+
+    QCOMPARE(actual, expected);
+}
+
 void LineParserTest::checksumEmpty() {
     QMap<QString, quint16> values;
     QString input;

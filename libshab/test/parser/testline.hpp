@@ -55,6 +55,8 @@ namespace org::thehellnet::shab::protocol {
 
         void negativeValues();
 
+        void serializeNormalLine();
+
         void checksumEmpty();
     };
 
