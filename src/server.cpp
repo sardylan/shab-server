@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
 
     ShabServer shabServer(argc, argv);
     shabServer.run();
-    return shabServer.exec();
+    return ShabServer::exec();
 }
 
 ShabServer::ShabServer(int &argc, char **argv) : QCoreApplication(argc, argv) {
