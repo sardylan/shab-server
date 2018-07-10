@@ -49,6 +49,8 @@ namespace org::thehellnet::shab::protocol {
 
         void wrongAngleLength();
 
+        void wrongLine();
+
         void normalLine();
 
         void negativeValues();

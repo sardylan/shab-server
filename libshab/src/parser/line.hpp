@@ -30,6 +30,8 @@ namespace org::thehellnet::shab::parser {
     class LineParser {
 
     public:
+        static ShabLine parse(const QString &rawData);
+
         static ShabLine parse(const QByteArray &rawData);
 
         static QByteArray serialize(const ShabLine &line);

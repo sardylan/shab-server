@@ -19,3 +19,5 @@ add_library(shab STATIC
 
 target_link_libraries(shab
         Qt5::Core)
+
+target_include_directories(shab PUBLIC .)

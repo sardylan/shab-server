@@ -24,8 +24,7 @@
 
 using namespace org::thehellnet::shab::parser;
 
-ShabLine LineParser::parse(const QByteArray &rawData) {
-    QString data = parseString(QString(rawData));
+ShabLine LineParser::parse(const QString &data) {
     QStringList items = data.split(LIBSHAB_LINE_SEPARATOR);
 
     if (items.count() != LIBSHAB_LINE_ELEMENTS)
@@ -38,7 +37,11 @@ ShabLine LineParser::parse(const QByteArray &rawData) {
         throw LineParserException();
 
     quint16 checksum = parseChecksum(checksumString);
-    QString checkRawData = checksumString.mid(5, checksumString.length());
+    QString checkRawData = data.mid(5, data.length());
+
+    quint16 computedChecksum = checksum16(checkRawData);
+    if (computedChecksum != checksum)
+        throw LineParserException();
 
     line.setChecksum(checksum);
 
@@ -75,6 +78,11 @@ ShabLine LineParser::parse(const QByteArray &rawData) {
     return line;
 }
 
+ShabLine LineParser::parse(const QByteArray &rawData) {
+    QString data = parseString(QString(rawData));
+    return LineParser::parse(data);
+}
+
 QByteArray LineParser::serialize(const ShabLine &line) {
     return QByteArray();
 }
@@ -82,7 +90,8 @@ QByteArray LineParser::serialize(const ShabLine &line) {
 quint16 LineParser::checksum16(const QString &item) {
     quint16 checksum = 0;
 
-    for (char c: item.toStdString()) {
+    const std::string &itemStr = item.toStdString();
+    for (char c: itemStr) {
         checksum += c;
         checksum %= 0xFFFF + 1;
     }

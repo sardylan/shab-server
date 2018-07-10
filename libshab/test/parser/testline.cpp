@@ -94,14 +94,22 @@ void LineParserTest::wrongAngleLength() {
     QVERIFY_EXCEPTION_THROWN(LineParser::parse(input), LineParserException);
 }
 
+void LineParserTest::wrongLine() {
+    QByteArray input;
+
+    input = "0810|shab|39445419|9541433|110|0|033";
+
+    QVERIFY_EXCEPTION_THROWN(LineParser::parse(input), LineParserException);
+}
+
 void LineParserTest::normalLine() {
     QByteArray input;
     ShabLine expected;
     ShabLine actual;
 
-    input = "04D2|shab|39445419|9541433|110|0|0";
+    input = "0810|shab|39445419|9541433|110|0|0";
 
-    expected.setChecksum(0x04d2);
+    expected.setChecksum(0x0810);
     expected.setIdent("shab");
     expected.setLatitude(39.445419);
     expected.setLongitude(9.541433);
@@ -119,9 +127,9 @@ void LineParserTest::negativeValues() {
     ShabLine expected;
     ShabLine actual;
 
-    input = "04D2|shab|-39445419|-9541433|-10|0|0";
+    input = "0866|shab|-39445419|-9541433|-10|0|0";
 
-    expected.setChecksum(0x04d2);
+    expected.setChecksum(0x0866);
     expected.setIdent("shab");
     expected.setLatitude(-39.445419);
     expected.setLongitude(-9.541433);
