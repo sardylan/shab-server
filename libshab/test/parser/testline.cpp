@@ -146,12 +146,12 @@ void LineParserTest::checksumEmpty() {
     values.insert("ciao", 0x19C);
 
     QString normalString = "";
-    for(int i=0; i<537;i++)
+    for (int i = 0; i < 537; i++)
         normalString.append("z");
     values.insert(normalString, 0xFFEA);
 
     QString overflowString = "";
-    for(int i=0; i<538;i++)
+    for (int i = 0; i < 538; i++)
         overflowString.append("z");
     values.insert(overflowString, 0x64);
 
