@@ -17,7 +17,14 @@ add_library(shab STATIC
         ${LIBSHAB_PROTOCOL}
         ${LIBSHAB_PARSER})
 
+target_include_directories(shab PUBLIC .)
+
 target_link_libraries(shab
         Qt5::Core)
 
-target_include_directories(shab PUBLIC .)
+add_executable(chechsum16
+        tool/checksum16.cpp)
+
+target_link_libraries(chechsum16
+        Qt5::Core
+        shab)
