@@ -17,6 +17,8 @@
  */
 
 
+#include <QtCore/QtCore>
+
 #include "line.hpp"
 
 using namespace org::thehellnet::shab::protocol;
@@ -29,6 +31,13 @@ ShabLine::ShabLine() {
     altitude = 0;
     speed = 0;
     angle = 0;
+    extended = false;
+    intTemp = 0;
+    outTemp = 0;
+    outPressure = 0;
+    sliceTotal = 0;
+    sliceNum = 0;
+    data.clear();
 }
 
 quint16 ShabLine::getChecksum() const {
@@ -87,14 +96,86 @@ void ShabLine::setAngle(double angle) {
     ShabLine::angle = angle;
 }
 
+bool ShabLine::isExtended() const {
+    return extended;
+}
+
+void ShabLine::setExtended(bool extended) {
+    ShabLine::extended = extended;
+}
+
+float ShabLine::getIntTemp() const {
+    return intTemp;
+}
+
+void ShabLine::setIntTemp(float intTemp) {
+    ShabLine::intTemp = intTemp;
+}
+
+float ShabLine::getOutTemp() const {
+    return outTemp;
+}
+
+void ShabLine::setOutTemp(float outTemp) {
+    ShabLine::outTemp = outTemp;
+}
+
+int ShabLine::getOutPressure() const {
+    return outPressure;
+}
+
+void ShabLine::setOutPressure(int outPressure) {
+    ShabLine::outPressure = outPressure;
+}
+
+int ShabLine::getSliceTotal() const {
+    return sliceTotal;
+}
+
+void ShabLine::setSliceTotal(int sliceTotal) {
+    ShabLine::sliceTotal = sliceTotal;
+}
+
+int ShabLine::getSliceNum() const {
+    return sliceNum;
+}
+
+void ShabLine::setSliceNum(int sliceNum) {
+    ShabLine::sliceNum = sliceNum;
+}
+
+const QByteArray &ShabLine::getData() const {
+    return data;
+}
+
+void ShabLine::setData(const QByteArray &data) {
+    ShabLine::data = data;
+}
+
 bool ShabLine::operator==(const ShabLine &rhs) const {
-    return checksum == rhs.checksum &&
-           ident == rhs.ident &&
-           latitude == rhs.latitude &&
-           longitude == rhs.longitude &&
-           altitude == rhs.altitude &&
-           speed == rhs.speed &&
-           angle == rhs.angle;
+    if (extended != rhs.extended)
+        return false;
+
+    if (checksum != rhs.checksum
+        || ident != rhs.ident
+        || latitude != rhs.latitude
+        || longitude != rhs.longitude
+        || altitude != rhs.altitude
+        || speed != rhs.speed
+        || angle != rhs.angle)
+        return false;
+
+    if (extended) {
+        if (intTemp != rhs.intTemp
+            || outTemp != rhs.outTemp
+            || outPressure != rhs.outPressure
+            || sliceTotal != rhs.sliceTotal
+            || sliceNum != rhs.sliceNum
+            || data != rhs.data)
+            return false;
+    }
+
+    return true;
 }
 
 bool ShabLine::operator!=(const ShabLine &rhs) const {

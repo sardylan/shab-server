@@ -51,11 +51,17 @@ namespace org::thehellnet::shab::protocol {
 
         void wrongLine();
 
+        void wrongLineExtended();
+
         void normalLine();
 
         void negativeValues();
 
+        void extendedLine();
+
         void serializeNormalLine();
+
+        void serializeExtendedLine();
 
         void checksumEmpty();
     };

@@ -19,10 +19,11 @@
 #ifndef __LIBSHAB_PROTOCOL_LINE_H
 #define __LIBSHAB_PROTOCOL_LINE_H
 
-#include <QtCore/QtGlobal>
 #include <QtCore/QString>
+#include <QtCore/QByteArray>
 
 #define LIBSHAB_LINE_ELEMENTS 7
+#define LIBSHAB_LINE_ELEMENTS_EXTENDED 13
 
 #define LIBSHAB_LINE_POSITION_CHECKSUM 0
 #define LIBSHAB_LINE_POSITION_IDENT 1
@@ -31,6 +32,12 @@
 #define LIBSHAB_LINE_POSITION_ALTITUDE 4
 #define LIBSHAB_LINE_POSITION_SPEED 5
 #define LIBSHAB_LINE_POSITION_ANGLE 6
+#define LIBSHAB_LINE_POSITION_INT_TEMP 7
+#define LIBSHAB_LINE_POSITION_OUT_TEMP 8
+#define LIBSHAB_LINE_POSITION_OUT_PRESSURE 9
+#define LIBSHAB_LINE_POSITION_SLICE_TOTAL 10
+#define LIBSHAB_LINE_POSITION_SLICE_NUM 11
+#define LIBSHAB_LINE_POSITION_DATA 12
 
 #define LIBSHAB_LINE_SEPARATOR '|'
 
@@ -69,6 +76,34 @@ namespace org::thehellnet::shab::protocol {
 
         void setAngle(double angle);
 
+        bool isExtended() const;
+
+        void setExtended(bool extended);
+
+        float getIntTemp() const;
+
+        void setIntTemp(float intTemp);
+
+        float getOutTemp() const;
+
+        void setOutTemp(float outTemp);
+
+        int getOutPressure() const;
+
+        void setOutPressure(int outPressure);
+
+        int getSliceTotal() const;
+
+        void setSliceTotal(int sliceTotal);
+
+        int getSliceNum() const;
+
+        void setSliceNum(int sliceNum);
+
+        const QByteArray &getData() const;
+
+        void setData(const QByteArray &data);
+
         bool operator==(const ShabLine &rhs) const;
 
         bool operator!=(const ShabLine &rhs) const;
@@ -81,7 +116,13 @@ namespace org::thehellnet::shab::protocol {
         double altitude;
         double speed;
         double angle;
-
+        bool extended;
+        float intTemp;
+        float outTemp;
+        int outPressure;
+        int sliceTotal;
+        int sliceNum;
+        QByteArray data;
     };
 }
 

@@ -38,17 +38,21 @@ namespace org::thehellnet::shab::parser {
 
         static quint16 checksum16(const QString &item);
 
-    private:
-
         static quint16 parseChecksum(const QString &item);
 
         static QString serializeChecksum(const quint16 &checksum);
 
+    private:
+
         static double parseDouble(const QString &item, int decimals);
+
+        static float parseFloat(const QString &item, int decimals);
 
         static QString parseString(const QString &item);
 
         static QString serializeDouble(const double &value, int precision = 6);
+
+        static QString serializeFloat(const float &value, int precision = 1);
     };
 }
 

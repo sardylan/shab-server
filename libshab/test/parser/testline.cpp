@@ -102,6 +102,14 @@ void LineParserTest::wrongLine() {
     QVERIFY_EXCEPTION_THROWN(LineParser::parse(input), LineParserException);
 }
 
+void LineParserTest::wrongLineExtended() {
+    QByteArray input;
+
+    input = "0810|shab|39445419|9541433|110|0|033|00|00";
+
+    QVERIFY_EXCEPTION_THROWN(LineParser::parse(input), LineParserException);
+}
+
 void LineParserTest::normalLine() {
     QByteArray input;
     ShabLine expected;
@@ -142,6 +150,33 @@ void LineParserTest::negativeValues() {
     QCOMPARE(actual, expected);
 }
 
+void LineParserTest::extendedLine() {
+    QByteArray input;
+    ShabLine expected;
+    ShabLine actual;
+
+    input = "10F8|shab|-39445419|-9541433|-10|00|00|236|-469|1013|4|4|Y2lhbw==";
+
+    expected.setChecksum(0x10F8);
+    expected.setIdent("shab");
+    expected.setLatitude(-39.445419);
+    expected.setLongitude(-9.541433);
+    expected.setAltitude(-1.0);
+    expected.setSpeed(0.0);
+    expected.setAngle(0.0);
+    expected.setExtended(true);
+    expected.setIntTemp(23.6f);
+    expected.setOutTemp(-46.9f);
+    expected.setOutPressure(1013);
+    expected.setSliceTotal(4);
+    expected.setSliceNum(4);
+    expected.setData(QByteArray("ciao"));
+
+    actual = LineParser::parse(input);
+
+    QCOMPARE(actual, expected);
+}
+
 void LineParserTest::serializeNormalLine() {
     ShabLine input;
     QString expected;
@@ -155,6 +190,32 @@ void LineParserTest::serializeNormalLine() {
     input.setAngle(0.0);
 
     expected = "08C6|shab|-39445419|-9541433|-10|00|00";
+
+    actual = LineParser::serialize(input);
+
+    QCOMPARE(actual, expected);
+}
+
+void LineParserTest::serializeExtendedLine() {
+    ShabLine input;
+    QString expected;
+    QString actual;
+
+    input.setIdent("shab");
+    input.setLatitude(-39.445419);
+    input.setLongitude(-9.541433);
+    input.setAltitude(-1.0);
+    input.setSpeed(0.0);
+    input.setAngle(0.0);
+    input.setExtended(true);
+    input.setIntTemp(23.7f);
+    input.setOutTemp(-46.9f);
+    input.setOutPressure(1012);
+    input.setSliceTotal(3);
+    input.setSliceNum(3);
+    input.setData(QByteArray("ciao"));
+
+    expected = "10F6|shab|-39445419|-9541433|-10|00|00|237|-469|1012|3|3|Y2lhbw==";
 
     actual = LineParser::serialize(input);
 

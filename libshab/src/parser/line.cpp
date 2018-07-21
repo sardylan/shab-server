@@ -27,7 +27,8 @@ using namespace org::thehellnet::shab::parser;
 ShabLine LineParser::parse(const QString &data) {
     QStringList items = data.split(LIBSHAB_LINE_SEPARATOR);
 
-    if (items.count() != LIBSHAB_LINE_ELEMENTS)
+    if (items.count() != LIBSHAB_LINE_ELEMENTS
+        && items.count() != LIBSHAB_LINE_ELEMENTS_EXTENDED)
         throw LineParserException();
 
     ShabLine line;
@@ -75,6 +76,38 @@ ShabLine LineParser::parse(const QString &data) {
         throw LineParserException();
     line.setAngle(parseDouble(angleSpeed, 1));
 
+    if (items.count() == LIBSHAB_LINE_ELEMENTS_EXTENDED) {
+        line.setExtended(true);
+
+        QString &intTemp = items[LIBSHAB_LINE_POSITION_INT_TEMP];
+        if (intTemp.length() == 0)
+            throw LineParserException();
+        line.setIntTemp(parseFloat(intTemp, 1));
+
+        QString &outTemp = items[LIBSHAB_LINE_POSITION_OUT_TEMP];
+        if (outTemp.length() == 0)
+            throw LineParserException();
+        line.setOutTemp(parseFloat(outTemp, 1));
+
+        QString &outPressure = items[LIBSHAB_LINE_POSITION_OUT_PRESSURE];
+        if (outPressure.length() == 0)
+            throw LineParserException();
+        line.setOutPressure(outPressure.toInt());
+
+        QString &sliceTotal = items[LIBSHAB_LINE_POSITION_SLICE_TOTAL];
+        if (sliceTotal.length() == 0)
+            throw LineParserException();
+        line.setSliceTotal(sliceTotal.toInt());
+
+        QString &sliceNum = items[LIBSHAB_LINE_POSITION_SLICE_NUM];
+        if (sliceNum.length() == 0)
+            throw LineParserException();
+        line.setSliceNum(sliceNum.toInt());
+
+        QString &base64Data = items[LIBSHAB_LINE_POSITION_DATA];
+        line.setData(QByteArray::fromBase64(base64Data.toLatin1()));
+    }
+
     return line;
 }
 
@@ -91,6 +124,15 @@ QString LineParser::serialize(const ShabLine &line) {
     stringItems.append(serializeDouble(line.getAltitude(), 1));
     stringItems.append(serializeDouble(line.getSpeed(), 1));
     stringItems.append(serializeDouble(line.getAngle(), 1));
+
+    if (line.isExtended()) {
+        stringItems.append(serializeFloat(line.getIntTemp(), 1));
+        stringItems.append(serializeFloat(line.getOutTemp(), 1));
+        stringItems.append(QString::number(line.getOutPressure()));
+        stringItems.append(QString::number(line.getSliceTotal()));
+        stringItems.append(QString::number(line.getSliceNum()));
+        stringItems.append(line.getData().toBase64());
+    }
 
     QString checksumLine = stringItems.join("|");
     quint16 checksum = checksum16(checksumLine);
@@ -132,6 +174,10 @@ double LineParser::parseDouble(const QString &item, int decimals) {
     return value;
 }
 
+float LineParser::parseFloat(const QString &item, int decimals) {
+    return static_cast<float>(parseDouble(item, decimals));
+}
+
 QString LineParser::parseString(const QString &item) {
     return QString(item).remove(QRegExp(R"([\n\t\r])")).trimmed();
 }
@@ -139,4 +185,8 @@ QString LineParser::parseString(const QString &item) {
 QString LineParser::serializeDouble(const double &value, int precision) {
     QString valueString = QString::number(value, 'f', precision);
     return valueString.replace(".", "");
+}
+
+QString LineParser::serializeFloat(const float &value, int precision) {
+    return serializeDouble(static_cast<float>(value), precision);
 }
